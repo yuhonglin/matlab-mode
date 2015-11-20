@@ -1,23 +1,25 @@
 function matlabeldolint(filepath, port)
 
-    lintresult = mlint(filepath);
+    emacsmatlabel_lintresult = mlint(filepath);
     
     import java.io.*
     import java.net.*
 
-    client = Socket('127.0.0.1', port);
+    emacsmatlabel_client = Socket('127.0.0.1', port);
 
-    outToServer = client.getOutputStream();
+    emacsmatlabel_outToServer = emacsmatlabel_client.getOutputStream();
     
-    out = DataOutputStream(outToServer);
-    for i = 1 : length(lintresult)
-        a = lintresult(i);
-        out.writeUTF(sprintf('%d\t%d\t%s\n', a.line, a.column(1), a.message));
+    emacsmatlabel_out = DataOutputStream(emacsmatlabel_outToServer);
+    for i = 1 : length(emacsmatlabel_lintresult)
+        emacsmatlabel_a = emacsmatlabel_lintresult(i);
+        emacsmatlabel_out.writeUTF(sprintf('%d\t%d\t%s\n', ...
+                                           emacsmatlabel_a.line, emacsmatlabel_a.column(1), emacsmatlabel_a.message));        
     end
-    out.close()
+    emacsmatlabel_out.close()
 
-    clear('client', 'outToServer', 'lintresult', 'a', ...
-          'out', 'client');
+    clear('emacsmatlabel_client', 'emacsmatlabel_outToServer', ...
+          'emacsmatlabel_lintresult', 'emacsmatlabel_a', ...
+          'emacsmatlabel_out', 'emacsmatlabel_client');
 
 
 end

@@ -10,17 +10,17 @@ function matlabeldocomplete(substring, port)
     import java.io.*
     import java.net.*
 
-    client = Socket('127.0.0.1', port);
+    emacsmatlabel_client = Socket('127.0.0.1', port);
 
-    outToServer = client.getOutputStream();
+    emacsmatlabel_outToServer = emacsmatlabel_client.getOutputStream();
 
-    out = DataOutputStream(outToServer);
+    emacsmatlabel_out = DataOutputStream(emacsmatlabel_outToServer);
     for i = 1 : length(emacs_completions_output)
-        out.writeUTF(emacs_completions_output(i));
+        emacsmatlabel_out.writeUTF(emacs_completions_output(i));
     end
-    out.close()
+    emacsmatlabel_out.close()
     
     clear('matlabMCRprocess_emacs', 'emacs_completions_output', ...
-          'out', 'client');
+          'emacsmatlabel_out', 'emacsmatlabel_client');
 
 end
