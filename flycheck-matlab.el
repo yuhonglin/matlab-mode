@@ -10,8 +10,8 @@
     :label "mlint path checking"
     :message (if (get-process "matlab-server")
 		 "matlab is on" "matlab process not found")
-    :face (if (and (get-process "matlab-server")
-	      'success '(bold error) )))))
+    :face (if (get-process "matlab-server")
+	      'success '(bold error)) )))
 
 (defun flycheck-matlab-get-error (filepath)
   (let ((rawerrstr (matlab-server-get-response-of-command 
