@@ -2,6 +2,7 @@
 (require 'matlab-server)
 (require 'company-matlab)
 (require 'flycheck-matlab)
+(require 'doc-matlab)
 
 (defun matlab-mode-common-setup ()
   (add-to-list 'matlab-mode-hook 
@@ -11,6 +12,9 @@
 		 ;; turn on the flycheck mode
 		 (flycheck-mode)
 		 ;; start the matlab-server
-		 (matlab-server-start))))
+		 (matlab-server-start)
+		 ;; bind the key of checking document
+		 (local-set-key (kbd "C-c h") 
+				'matlab-view-current-word-doc-in-another-buffer))))
 
 (provide 'matlab-mode)

@@ -13,6 +13,8 @@ An emacs matlab mode based on the [classic one](http://matlab-emacs.sourceforge.
 
 The above two functionalities need running ```matlab-shell``` command first.
 
+3. Easy to view document of word at cursor (default keybining: <kbd>Ctrl-c</kbd> + <kbd>h</kbd>).
+
 ## Install
 
 1. Install dependencies like ```s.el```, ```flycheck``` and ```company-mode```.
