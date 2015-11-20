@@ -11,7 +11,7 @@ An emacs matlab mode based on the [classic one](http://matlab-emacs.sourceforge.
 2. A flycheck backend
 ![demo](./image/flycheck-demo.png)
 
-3. Easy to view document of word at cursor (default keybining: <kbd>Ctrl-c</kbd> + <kbd>h</kbd>).
+3. Easy to view document of word at cursor (default keybinding: <kbd>Ctrl-c</kbd> + <kbd>h</kbd>).
 
 The above functionalities need running ```matlab-shell``` command first.
 
