@@ -11,7 +11,7 @@ An emacs matlab mode based on the [classic one](http://matlab-emacs.sourceforge.
 2. A flycheck backend
 ![demo](./image/flycheck-demo.png)
 
-The above two functionalities need to run ```matlab-shell``` first.
+The above two functionalities need running ```matlab-shell``` command first.
 
 ## Install
 
@@ -26,7 +26,7 @@ The above two functionalities need to run ```matlab-shell``` first.
 (matlab-mode-common-setup)
 ```
 
-3. Do not forget to run matlab-shell if you want to use autocompletion and syntax checking.
+> Do not forget to run matlab-shell if you want to use autocompletion and syntax checking.
 
 ## Copyright
 
