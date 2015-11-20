@@ -2,6 +2,7 @@
 
 (require 'flycheck)
 (require 'matlab-server)
+(require 's)
 
 (defun flycheck-matlab--verify (checker)
   "Verify the matlab syntax checker."
