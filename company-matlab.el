@@ -15,8 +15,8 @@
 
 (defun company-matlab-process-received-data (in arg)
   (delq nil (mapcar (lambda (s)
-		      (if (or (string= s "") (string= s arg))
-			      nil (substring s 1 )))
+		      (if (or (string= s "") (string= (substring s 1) arg))
+			      nil (substring s 1)))
 		    (s-split "\000" in))))
 
 
