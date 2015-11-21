@@ -35,6 +35,9 @@
     (prefix (and (or (eq major-mode 'matlab-mode)
 		     (string= (buffer-name) "*MATLAB*"))
 		     (company-grab-symbol)))
+    (no-cache nil)
+    (duplicates t)
+    (ignore-case nil)
     (candidates
      (company-matlab-get-candidates arg))))
 
