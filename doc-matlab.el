@@ -21,7 +21,7 @@
   (let* ((word (doc-matlab-grab-current-word))
 	 (doc (doc-matlab-process-received-data 
 	       (matlab-server-get-response-of-command 
-		(concat "matlabeldodoc('" word "', " matlab-server-port ")\n"))))
+		(concat "matlabeldodoc('" word "', " "'" (buffer-file-name) "', " matlab-server-port ")\n"))))
 	 (buffer (get-buffer-create (concat "*matdoc:" word "*"))))
 
     (set-buffer buffer)
