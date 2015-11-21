@@ -78,6 +78,10 @@
       
       matlab-server-content-received)))
 
+(defun matlab-server-get-error-message-maybe (msg)
+  "get the error msg. If this is not an error, return nil"
+  (if (s-prefix-p "[matlabelerror]:" msg)
+      (substring msg 17)))
 
 (defun matlab-server-comint-prehook (s)
   (if (and (string= (buffer-name) "*MATLAB*")

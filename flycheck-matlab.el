@@ -17,14 +17,17 @@
 (defun flycheck-matlab-get-error (filepath)
   (let ((rawerrstr (matlab-server-get-response-of-command 
 		    (concat "matlabeldolint('" filepath "', " matlab-server-port ")\n"))))
-    (delq nil
-	  (mapcar (lambda (rrs)
-		    (if (not (string= rrs ""))
-			(let* ((cleanrs (substring rrs 2))
-			      (cleanrs-split (s-split "\t" (s-trim cleanrs))))
-			  (cl-multiple-value-bind (lpostart cpostart estr) cleanrs-split
-			    `(,(string-to-int lpostart) ,(string-to-int lpostart) ,(string-to-int cpostart) ,(string-to-int cpostart) ,estr)))))
-		    (s-split "\n" rawerrstr)))))
+    (let ((errormsg (matlab-server-get-error-message-maybe (substring rawerrstr 2))))
+      (if errormsg
+	  (error errormsg)
+	(delq nil
+	      (mapcar (lambda (rrs)
+			(if (not (string= rrs ""))
+			    (let* ((cleanrs (substring rrs 2))
+				   (cleanrs-split (s-split "\t" (s-trim cleanrs))))
+			      (cl-multiple-value-bind (lpostart cpostart estr) cleanrs-split
+				`(,(string-to-int lpostart) ,(string-to-int lpostart) ,(string-to-int cpostart) ,(string-to-int cpostart) ,estr)))))
+		      (s-split "\n" rawerrstr)))))))
 
 		    
 (defun flycheck-matlab--start (checker callback)
