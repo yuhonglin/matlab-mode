@@ -9,9 +9,9 @@
   (list
    (flycheck-verification-result-new
     :label "mlint path checking"
-    :message (if (get-process "matlab-server")
+    :message (if t
 		 "matlab is on" "matlab process not found")
-    :face (if (get-process "matlab-server")
+    :face (if t
 	      'success '(bold error)) )))
 
 (defun flycheck-matlab-get-error (filepath)

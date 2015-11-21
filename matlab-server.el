@@ -72,7 +72,7 @@
       (let ((old-num-done matlab-server-nth-connection-done))
 	(process-send-string (get-buffer-process "*MATLAB*") s)
 	(while (= old-num-done matlab-server-nth-connection-done)
-	  (sit-for 0.1)))
+	  (sleep-for .1)))
       
       (setq matlab-server-if-turn-off-comint-output nil)
       
