@@ -5,8 +5,15 @@ function matlabeldodoc(arg, filepath, port)
     
         [emacsmatlabel_s, emacsmatlabel_e] = ...
             regexp(emacsmatlabel_whichresult, '\/[\w\/@-]+');
-        emacsmatlabel_docofarg = ...
-            help(emacsmatlabel_whichresult(emacsmatlabel_s : emacsmatlabel_e));
+        
+        arg = emacsmatlabel_whichresult(emacsmatlabel_s : emacsmatlabel_e);
+        
+        if isempty(arg)
+            emacsmatlabel_docofarg = '';
+        else
+            emacsmatlabel_docofarg = help(arg);
+        end
+        
     catch
         emacsmatlabel_docofarg = help(arg);
     end
