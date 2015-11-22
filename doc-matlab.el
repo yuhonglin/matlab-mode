@@ -8,8 +8,8 @@
   (save-excursion
    (let (start end oldpos)
      (setq oldpos (point))
-     (skip-chars-backward "A-Za-z0–9_") (setq start (point))
-     (skip-chars-forward "A-Za-z0–9_") (setq end (point))
+     (skip-chars-backward "A-Za-z0-9_") (setq start (point))
+     (skip-chars-forward "A-Za-z0-9_") (setq end (point))
      (buffer-substring start end))))
 
 (defun matlab-view-current-word-doc-in-another-buffer ()
