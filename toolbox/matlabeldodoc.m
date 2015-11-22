@@ -6,12 +6,12 @@ function matlabeldodoc(arg, filepath, port)
         [emacsmatlabel_s, emacsmatlabel_e] = ...
             regexp(emacsmatlabel_whichresult, '\/[\w\/@-]+');
         
-        arg = emacsmatlabel_whichresult(emacsmatlabel_s : emacsmatlabel_e);
+        emacsmatlabel_arg = emacsmatlabel_whichresult(emacsmatlabel_s : emacsmatlabel_e);
         
-        if isempty(arg)
-            emacsmatlabel_docofarg = '';
-        else
+        if isempty(emacsmatlabel_arg)
             emacsmatlabel_docofarg = help(arg);
+        else
+            emacsmatlabel_docofarg = help(emacsmatlabel_arg);
         end
         
     catch
@@ -30,6 +30,6 @@ function matlabeldodoc(arg, filepath, port)
     emacsmatlabel_out.close()
 
     clear('emacsmatlabel_whichresult', 'emacsmatlabel_docofarg', ...
-          'emacsmatlabel_out', 'emacsmatlabel_client');
+          'emacsmatlabel_out', 'emacsmatlabel_client', 'emacsmatlabel_arg');
 
 end
