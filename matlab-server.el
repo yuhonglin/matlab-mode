@@ -63,6 +63,19 @@
        (matlab-on-prompt-p)))
 
 
+(defun matlab-server-get-status ()
+  "get the status of matlab prompt"
+  (if (not (get-process "matlab-server"))
+      "matlab server is down, try M-x matlab-server-start."
+    (if (not (get-process "MATLAB"))
+	"matlab prompt is not run, try M-x matlab-shell."
+      (if matlab-server-if-turn-off-comint-output
+	  "matlab is busy."
+	(if (not (matlab-on-prompt-p))
+	    "matlab is busy."
+	  "ready")))))
+
+
 (defun matlab-server-get-response-of-command (s)
   (if (not (matlab-server-ready-for-command-p))
       nil

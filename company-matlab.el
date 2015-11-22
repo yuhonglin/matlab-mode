@@ -22,8 +22,9 @@
 
 ;; some are copied from matlab-shell-collect-command-output function
 (defun company-matlab-get-candidates (arg)
-  (if (not (matlab-server-ready-for-command-p))
-      (error "matlab is busy or the network process is down"))
+  (let ((status (matlab-server-get-status)))
+    (if (not (string= status "ready"))
+      (error status)))
   (company-matlab-process-received-data
    (matlab-server-get-response-of-command 
     (concat "matlabeldocomplete('" arg "', " matlab-server-port ")\n")) arg))

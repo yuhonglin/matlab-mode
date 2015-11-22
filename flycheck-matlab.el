@@ -32,16 +32,17 @@
 
 		    
 (defun flycheck-matlab--start (checker callback)
-  (if (not (matlab-server-ready-for-command-p))
-      (error "matlab is busy or the network process is down")
-    (progn
-      (let* ((rawerror (flycheck-matlab-get-error (buffer-file-name)))
-	     (errors (mapcar (lambda (rerr)
-			       (cl-multiple-value-bind (lpostart lposend cpostart cposend estr) rerr
-				 (flycheck-error-new-at lpostart cpostart 'warning estr :checker checker)))
-			     rawerror)))
-	(funcall callback 'finished errors)))))
-    
+  (let ((status (matlab-server-get-status)))
+    (if (not (string= status "ready"))
+      (error status)
+      (progn
+	(let* ((rawerror (flycheck-matlab-get-error (buffer-file-name)))
+	       (errors (mapcar (lambda (rerr)
+				 (cl-multiple-value-bind (lpostart lposend cpostart cposend estr) rerr
+				   (flycheck-error-new-at lpostart cpostart 'warning estr :checker checker)))
+			       rawerror)))
+	  (funcall callback 'finished errors))))))
+  
 
 (flycheck-define-generic-checker 'matlab
   "A syntax checker for matlab."

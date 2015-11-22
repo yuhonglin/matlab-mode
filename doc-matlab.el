@@ -15,9 +15,10 @@
 (defun matlab-view-current-word-doc-in-another-buffer ()
   "look up the matlab help info and show in another buffer"
   (interactive)
-  (if (not (matlab-server-ready-for-command-p))
-      (error "matlab is busy or the network process is down"))
-
+  (let ((status (matlab-server-get-status)))
+    (if (not (string= status "ready"))
+	(error status)))
+  
   (let* ((word (doc-matlab-grab-current-word))
 	 (doc (doc-matlab-process-received-data 
 	       (matlab-server-get-response-of-command 
