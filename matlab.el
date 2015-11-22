@@ -5332,6 +5332,9 @@ This uses the lookfor command to find viable commands."
 
 (defun matlab-on-empty-prompt-p ()
   "Return t if we MATLAB is on an empty prompt."
+  (if (get-buffer "*MATLAB*")
+      (set-buffer "*MATLAB*")
+    (error "matlab prompt is not run"))  
   (save-excursion
     (let ((inhibit-field-text-motion t))
       (goto-char (point-max))

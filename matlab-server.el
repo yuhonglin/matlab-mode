@@ -71,14 +71,15 @@
 	"matlab prompt is not run, try M-x matlab-shell."
       (if matlab-server-if-turn-off-comint-output
 	  "matlab is busy."
-	(if (not (matlab-on-prompt-p))
+	(if (save-current-buffer
+	      (set-buffer "*MATLAB*")
+	      (not (matlab-on-prompt-p)))
 	    "matlab is busy."
 	  "ready")))))
 
 
 (defun matlab-server-get-response-of-command (s)
-  (if (not (matlab-server-ready-for-command-p))
-      nil
+  "TODO: cancel unfinished last command?"
     (progn
       (setq matlab-server-if-turn-off-comint-output t)
 
@@ -89,7 +90,7 @@
       
       (setq matlab-server-if-turn-off-comint-output nil)
       
-      matlab-server-content-received)))
+      matlab-server-content-received))
 
 (defun matlab-server-get-error-message-maybe (msg)
   "get the error msg. If this is not an error, return nil"
