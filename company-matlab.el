@@ -24,7 +24,8 @@
 (defun company-matlab-get-candidates (arg)
   (let ((status (matlab-server-get-status)))
     (if (not (string= status "ready"))
-      (error status)))
+      (message status)
+      (company-other-backend)))
   (company-matlab-process-received-data
    (matlab-server-get-response-of-command 
     (concat "matlabeldocomplete('" arg "', " matlab-server-port ")\n")) arg))
