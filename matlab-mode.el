@@ -4,6 +4,14 @@
 (require 'flycheck-matlab)
 (require 'doc-matlab)
 
+;; hooks that must be done
+(add-to-list 'matlab-mode-hook
+	     (lambda ()
+	       ;; set the prompt value to make matlab-on-prompt-p work
+	       (setq-local comint-prompt-regexp "^\\(K\\|EDU\\)?>> *")))
+
+
+;; setup that can be changed
 (defun matlab-mode-common-setup ()
   (add-to-list 'matlab-mode-hook 
 	       (lambda ()
