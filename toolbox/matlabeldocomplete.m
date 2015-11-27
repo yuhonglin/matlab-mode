@@ -7,7 +7,7 @@ function matlabeldocomplete(substring, port)
 
     emacsmatlabeldotpos = strfind(substring, '.');
     
-    if isempty(emacsmatlabeldotpos)
+    if isempty(emacsmatlabeldotpos) || substring(1) == '.'
         matlabMCRprocess_emacs = com.mathworks.jmi.MatlabMCR; ...
             emacs_completions_output = matlabMCRprocess_emacs.mtFindAllTabCompletions(substring, length(substring),0);
     else
