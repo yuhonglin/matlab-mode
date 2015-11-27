@@ -5,7 +5,33 @@ function matlabeldocomplete(substring, port)
 % completions.  This hides the differences between versions
 % for the calls needed to do completions.
 
-    matlabMCRprocess_emacs = com.mathworks.jmi.MatlabMCR; emacs_completions_output = matlabMCRprocess_emacs.mtFindAllTabCompletions(substring, length(substring),0);
+    emacsmatlabeldotpos = strfind(substring, '.');
+    
+    if isempty(emacsmatlabeldotpos)
+        matlabMCRprocess_emacs = com.mathworks.jmi.MatlabMCR; ...
+            emacs_completions_output = matlabMCRprocess_emacs.mtFindAllTabCompletions(substring, length(substring),0);
+    else
+        emacsmatlabelsplitbydot = strsplit(substring, '.');
+        emacsmatlabelcumstr = emacsmatlabelsplitbydot{1};
+        emacsmatlabelstatus = 'success';
+        for i = 2 : length(emacsmatlabelsplitbydot) - 1
+            
+            if isempty(find(not (cellfun('isempty', ...
+                                         strfind(eval(emacsmatlabelcumstr), ...
+                                                 emacsmatlabelsplitbydot{i}))),1))
+                emacsmatlabelstatus = 'fail';
+                break;
+            end
+        end
+        
+        if strcmp(emacsmatlabelstatus, 'fail')
+            emacs_completions_output = {};
+        else
+            emacsmatlabelrawcandidatecell = fieldnames(evalin('base', ...
+                                                              emacsmatlabelcumstr));
+            emacs_completions_output = strcat([emacsmatlabelcumstr, '.'], emacsmatlabelrawcandidatecell(~cellfun('isempty',regexp(emacsmatlabelrawcandidatecell,['^' emacsmatlabelsplitbydot{end} '.*'],'match','once'))));
+        end
+    end
     
     import java.io.*
     import java.net.*
@@ -21,6 +47,8 @@ function matlabeldocomplete(substring, port)
     emacsmatlabel_out.close()
     
     clear('matlabMCRprocess_emacs', 'emacs_completions_output', ...
-          'emacsmatlabel_out', 'emacsmatlabel_client');
+          'emacsmatlabel_out', 'emacsmatlabel_client', ...
+          'emacsmatlabelsplitbydot', 'emacsmatlabelrawcandidatecell', ...
+          'emacsmatlabelcumstr', 'emacsmatlabeldotpos', 'emacsmatlabelstatus');
 
 end

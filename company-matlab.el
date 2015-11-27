@@ -34,13 +34,18 @@
 	    (company-other-backend)
 	  res)))))
 
+
+(defun company-matlab-grab-symbol ()
+  (buffer-substring (point) (save-excursion (skip-syntax-backward "w_.")
+                                                (point))))
+
 (defun company-matlab (command &optional arg &rest ignored)
   (interactive (list 'interactive))
   (cl-case command
     (interactive (company-begin-backend 'company-matlab))
     (prefix (and (or (eq major-mode 'matlab-mode)
 		     (string= (buffer-name) "*MATLAB*"))
-		     (company-grab-symbol)))
+		     (company-matlab-grab-symbol)))
     (no-cache nil)
     (duplicates t)
     (ignore-case nil)
