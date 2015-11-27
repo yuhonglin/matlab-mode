@@ -4743,7 +4743,7 @@ FILE is ignored, and ARGS is returned."
 	  ;; Use our local toolbox directory.
 	  (process-send-string
 	   (get-buffer-process gud-comint-buffer)
-	   (format "addpath('%s','-begin'); rehash; emacsinit('%s');\n"
+	   (format "global emacs_completions_output; addpath('%s','-begin'); rehash; emacsinit('%s');\n"
 		   (expand-file-name "toolbox"
 				     (file-name-directory
 				      (locate-library "matlab")))

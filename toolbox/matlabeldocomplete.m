@@ -4,12 +4,13 @@ function matlabeldocomplete(substring, port)
 % This is used by Emacs TAB in matlab-shell to provide possible
 % completions.  This hides the differences between versions
 % for the calls needed to do completions.
-
+  
     emacsmatlabeldotpos = strfind(substring, '.');
     
     if isempty(emacsmatlabeldotpos) || substring(1) == '.'
-        matlabMCRprocess_emacs = com.mathworks.jmi.MatlabMCR; ...
-            emacs_completions_output = matlabMCRprocess_emacs.mtFindAllTabCompletions(substring, length(substring),0);
+        % matlabMCRprocess_emacs = com.mathworks.jmi.MatlabMCR; ...
+        %     emacs_completions_output = matlabMCRprocess_emacs.mtFindAllTabCompletions(substring, length(substring),0);
+        evalin('base', sprintf('matlabMCRprocess_emacs = com.mathworks.jmi.MatlabMCR; emacs_completions_output = matlabMCRprocess_emacs.mtFindAllTabCompletions(''%s'', %d,0);', substring, length(substring)))
     else
         emacsmatlabelsplitbydot = strsplit(substring, '.');
         emacsmatlabelcumstr = emacsmatlabelsplitbydot{1};
@@ -41,12 +42,14 @@ function matlabeldocomplete(substring, port)
     emacsmatlabel_outToServer = emacsmatlabel_client.getOutputStream();
 
     emacsmatlabel_out = DataOutputStream(emacsmatlabel_outToServer);
+    
+    global emacs_completions_output
     for i = 1 : length(emacs_completions_output)
         emacsmatlabel_out.writeUTF(emacs_completions_output(i));
     end
     emacsmatlabel_out.close()
     
-    clear('matlabMCRprocess_emacs', 'emacs_completions_output', ...
+    clear('matlabMCRprocess_emacs', ...
           'emacsmatlabel_out', 'emacsmatlabel_client', ...
           'emacsmatlabelsplitbydot', 'emacsmatlabelrawcandidatecell', ...
           'emacsmatlabelcumstr', 'emacsmatlabeldotpos', 'emacsmatlabelstatus');
