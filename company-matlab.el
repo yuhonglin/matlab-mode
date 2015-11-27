@@ -27,10 +27,12 @@
 	(progn
 	  (message status)
 	  (company-other-backend))
-      (progn
-	(company-matlab-process-received-data
-	 (matlab-server-get-response-of-command 
-	  (concat "matlabeldocomplete('" arg "', " matlab-server-port ")\n")) arg)))))
+      (let ((res (company-matlab-process-received-data
+		  (matlab-server-get-response-of-command 
+		   (concat "matlabeldocomplete('" arg "', " matlab-server-port ")\n")) arg)))
+	(if (eq res nil)
+	    (company-other-backend)
+	  res)))))
 
 (defun company-matlab (command &optional arg &rest ignored)
   (interactive (list 'interactive))
