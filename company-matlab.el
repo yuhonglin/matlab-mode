@@ -22,17 +22,21 @@
 
 ;; some are copied from matlab-shell-collect-command-output function
 (defun company-matlab-get-candidates (arg)
-  (let ((status (matlab-server-get-status)))
-    (if (not (string= status "ready"))
-	(progn
-	  (message status)
-	  (company-other-backend))
-      (let ((res (company-matlab-process-received-data
-		  (matlab-server-get-response-of-command 
-		   (concat "matlabeldocomplete('" arg "', " matlab-server-port ")\n")) arg)))
-	(if (eq res nil)
+  (if (or (string= arg "")
+	  (string= (substring arg 1 1) ".")
+	  (string= (substring arg 1 1) "~"))
+      nil
+    (let ((status (matlab-server-get-status)))
+      (if (not (string= status "ready"))
+	  (progn
+	    (message status)
+	    (company-other-backend))
+	(let ((res (company-matlab-process-received-data
+		    (matlab-server-get-response-of-command 
+		     (concat "matlabeldocomplete('" arg "', " matlab-server-port ")\n")) arg)))
+	  (if (eq res nil)
 	    (company-other-backend)
-	  res)))))
+	    res))))))
 
 
 (defun company-matlab-grab-symbol ()
