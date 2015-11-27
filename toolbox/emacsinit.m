@@ -17,5 +17,6 @@ function emacsinit(clientcommand)
     % Use the desktop hotlinking system in MATLAB Shell.  matlab-shell
     % will interpret them, and provide clickable areas.
     % NOTE: This doesn't work in all cases where HotLinks are used.
-    feature('HotLinks','on');
+    % -- set off by lin at "Fri Nov 27 14:51:49 2015"
+    feature('HotLinks','off');
 end
