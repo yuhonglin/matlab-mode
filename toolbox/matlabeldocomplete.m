@@ -4,7 +4,9 @@ function matlabeldocomplete(substring, port)
 % This is used by Emacs TAB in matlab-shell to provide possible
 % completions.  This hides the differences between versions
 % for the calls needed to do completions.
-  
+   
+    global emacs_completions_output
+    
     emacsmatlabeldotpos = strfind(substring, '.');
     
     if isempty(emacsmatlabeldotpos) || substring(1) == '.'
@@ -42,8 +44,7 @@ function matlabeldocomplete(substring, port)
     emacsmatlabel_outToServer = emacsmatlabel_client.getOutputStream();
 
     emacsmatlabel_out = DataOutputStream(emacsmatlabel_outToServer);
-    
-    global emacs_completions_output
+        
     for i = 1 : length(emacs_completions_output)
         emacsmatlabel_out.writeUTF(emacs_completions_output(i));
     end
