@@ -6,6 +6,7 @@ function matlabeldocomplete(substring, port)
 % for the calls needed to do completions.
    
     global emacs_completions_output
+    global emacsmatlabelfieldnames
     
     emacsmatlabeldotpos = strfind(substring, '.');
     
@@ -17,22 +18,30 @@ function matlabeldocomplete(substring, port)
         emacsmatlabelsplitbydot = strsplit(substring, '.');
         emacsmatlabelcumstr = emacsmatlabelsplitbydot{1};
         emacsmatlabelstatus = 'success';
-        for i = 2 : length(emacsmatlabelsplitbydot) - 1
-            
-            if isempty(find(not (cellfun('isempty', ...
-                                         strfind(eval(emacsmatlabelcumstr), ...
-                                                 emacsmatlabelsplitbydot{i}))),1))
+        for i = 2 : length(emacsmatlabelsplitbydot)-1
+            try
+                evalin('base',['emacsmatlabelfieldnames=fieldnames(' ...
+                               emacsmatlabelcumstr ');'])
+            catch
                 emacsmatlabelstatus = 'fail';
                 break;
             end
+            if not(strcmp(emacsmatlabelsplitbydot{i},'')) && isempty(find(not (cellfun('isempty', strfind(emacsmatlabelfieldnames, emacsmatlabelsplitbydot{i}))),1))
+                emacsmatlabelstatus = 'fail';
+                break;
+            end
+            emacsmatlabelcumstr = [emacsmatlabelcumstr '.' emacsmatlabelsplitbydot{i}];
         end
         
         if strcmp(emacsmatlabelstatus, 'fail')
             emacs_completions_output = {};
         else
-            emacsmatlabelrawcandidatecell = fieldnames(evalin('base', ...
-                                                              emacsmatlabelcumstr));
-            emacs_completions_output = strcat([emacsmatlabelcumstr, '.'], emacsmatlabelrawcandidatecell(~cellfun('isempty',regexp(emacsmatlabelrawcandidatecell,['^' emacsmatlabelsplitbydot{end} '.*'],'match','once'))));
+            try
+                emacsmatlabelrawcandidatecell = fieldnames(evalin('base', emacsmatlabelcumstr));
+                emacs_completions_output = strcat([emacsmatlabelcumstr, '.'], emacsmatlabelrawcandidatecell(~cellfun('isempty',regexp(emacsmatlabelrawcandidatecell,['^' emacsmatlabelsplitbydot{end} '.*'],'match','once'))));
+            catch
+                emacs_completions_output = {};
+            end
         end
     end
     
