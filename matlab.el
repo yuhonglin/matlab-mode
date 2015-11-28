@@ -4340,7 +4340,7 @@ Try C-h f matlab-shell RET"))
 		matlab-help-map)
               (define-key km "\C-c." 'matlab-find-file-on-path)
 	      ;; (define-key km [(tab)] 'matlab-shell-tab)
-	      (define-key km "\C-i" 'matlab-shell-tab)
+	      ;; (define-key km "\C-i" 'matlab-shell-tab)
 	      (define-key km [(control up)]
 		'comint-previous-matching-input-from-input)
 	      (define-key km [(control down)]
