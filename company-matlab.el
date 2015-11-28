@@ -30,17 +30,19 @@
       (if (not (string= status "ready"))
 	  (progn
 	    (message status)
-	    (company-other-backend))
+	    nil)
+	    ;;(company-other-backend))
 	(let ((res (company-matlab-process-received-data
 		    (matlab-server-get-response-of-command 
 		     (concat "matlabeldocomplete('" arg "', " matlab-server-port ")\n")) arg)))
 	  (if (eq res nil)
-	    (company-other-backend)
+	      nil
+	    ;;(company-other-backend)
 	    res))))))
 
 
 (defun company-matlab-grab-symbol ()
-  (buffer-substring (point) (save-excursion (skip-syntax-backward "w_.")
+  (buffer-substring (point) (save-excursion (skip-chars-backward "a-zA-Z0-9._")
                                                 (point))))
 
 (defun company-matlab (command &optional arg &rest ignored)
