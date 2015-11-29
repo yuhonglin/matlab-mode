@@ -23,9 +23,12 @@
 		 (setq-local flycheck-check-syntax-automatically '(save mode-enabled))
 		 ;; bind the key of checking document
 		 (local-set-key (kbd "C-c h") 
-				'matlab-view-current-word-doc-in-another-buffer)))
+				'matlab-view-current-word-doc-in-another-buffer)
+		 (add-to-list 'company-backends 'company-matlab)))
+
   (add-to-list 'matlab-shell-mode-hook
 	       (lambda ()
+		 (add-to-list 'company-backends 'company-matlab)
 		 (local-set-key (kbd "C-c h") 
 				'matlab-view-current-word-doc-in-another-buffer))))
 

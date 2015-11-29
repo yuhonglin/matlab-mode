@@ -57,20 +57,27 @@
       (if (not (string= status "ready"))
 	  (progn
 	    (message status)
-	    nil)
-	    ;;(company-other-backend))
+	    ;; nil)
+	    (company-other-backend))
 	(let ((res (company-matlab-process-received-data
 		    (matlab-server-get-response-of-command 
 		     (concat "matlabeldocomplete('" arg "', " matlab-server-port ")\n")) arg)))
 	  (if (eq res nil)
-	      nil
-	    ;;(company-other-backend)
+	    ;;  nil
+	    (company-other-backend)
 	    res))))))
 
 
 (defun company-matlab-grab-symbol ()
-  (buffer-substring (point) (save-excursion (skip-chars-backward "a-zA-Z0-9._")
-                                                (point))))
+  (let* ((prefix (buffer-substring (point) 
+				  (save-excursion (skip-chars-backward "a-zA-Z0-9._")
+						  (point)))))
+    (if (or (= (length prefix) 0)
+	    (string= (substring prefix 0 1) ".")
+	    (string= (substring prefix 0 1) "/"))
+	nil
+      prefix)))
+
 
 (defun company-matlab (command &optional arg &rest ignored)
   (interactive (list 'interactive))
@@ -84,9 +91,6 @@
     (ignore-case nil)
     (candidates
      (company-matlab-get-candidates arg))))
-
-(add-to-list 'company-backends 'company-matlab)
-
 
 
 (defun company-matlab-company-cancel-hook (arg)
