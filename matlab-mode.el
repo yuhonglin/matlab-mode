@@ -24,11 +24,20 @@
 		 ;; bind the key of checking document
 		 (local-set-key (kbd "C-c h") 
 				'matlab-view-current-word-doc-in-another-buffer)
-		 (add-to-list 'company-backends 'company-matlab)))
+		 ;; handle company-backends
+		 (make-local-variable 'company-backends)
+		 (delete 'company-files company-backends)
+		 (add-to-ordered-list 'company-backends '(company-dabbrev company-matlab) 0)
+		 (add-to-ordered-list 'company-backends 'company-files -1)))
 
   (add-to-list 'matlab-shell-mode-hook
 	       (lambda ()
-		 (add-to-list 'company-backends 'company-matlab)
+		 ;; handle company-backends
+		 (make-local-variable 'company-backends)
+		 (delete 'company-files company-backends)
+		 (add-to-ordered-list 'company-backends '(company-dabbrev company-matlab) 0)
+		 (add-to-ordered-list 'company-backends 'company-files -1)
+		 ;; band matlab-doc key
 		 (local-set-key (kbd "C-c h") 
 				'matlab-view-current-word-doc-in-another-buffer))))
 
