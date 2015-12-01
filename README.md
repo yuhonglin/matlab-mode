@@ -15,6 +15,10 @@ An emacs matlab mode based on the [classic one](http://matlab-emacs.sourceforge.
 
 The above functionalities need running ```matlab-shell``` command first.
 
+4. Jump to definition (default keybinding: <kbd>Ctrl-c</kbd> + <kbd>s</kbd>)
+
+Currently, this only helps open the souce file (can not go to the definition of the function).
+If it does not work, it may be becasue you have not added the file's folder into matlab workspace.
 
 ## Install
 
