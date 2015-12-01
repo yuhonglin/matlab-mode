@@ -14,6 +14,7 @@
 
 ;; setup that can be changed
 (defun matlab-mode-common-setup ()
+  ;; for .m files
   (add-to-list 'matlab-mode-hook 
 	       (lambda ()
 		 ;; start the matlab-server
@@ -28,19 +29,15 @@
 		 ;; bind the key of jump to source code
 		 (local-set-key (kbd "C-c s") 
 				'matlab-jump-to-definition-of-word-at-cursor)
-		 ;; handle company-backends
-		 (make-local-variable 'company-backends)
-		 (delete 'company-files company-backends)
-		 (add-to-ordered-list 'company-backends '(company-dabbrev company-matlab) 0)
-		 (add-to-ordered-list 'company-backends 'company-files -1)))
+		 ;; set company-backends
+		 (setq-local company-backends '(company-files (company-dabbrev company-matlab)))))
 
+  ;; for matlab-shell
   (add-to-list 'matlab-shell-mode-hook
 	       (lambda ()
-		 ;; handle company-backends
-		 (make-local-variable 'company-backends)
-		 (delete 'company-files company-backends)
-		 (add-to-ordered-list 'company-backends '(company-dabbrev company-matlab) 0)
-		 (add-to-ordered-list 'company-backends 'company-files -1)
+		 ;; set company-backends
+		 (setq-local company-backends '(company-files (company-dabbrev company-matlab)))
+		 
 		 ;; band matlab-doc key
 		 (local-set-key (kbd "C-c h") 
 				'matlab-view-current-word-doc-in-another-buffer)
