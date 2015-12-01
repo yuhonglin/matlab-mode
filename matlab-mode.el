@@ -3,6 +3,7 @@
 (require 'company-matlab)
 (require 'flycheck-matlab)
 (require 'doc-matlab)
+(require 'jtd-matlab)
 
 ;; hooks that must be done
 (add-to-list 'matlab-mode-hook
@@ -24,6 +25,9 @@
 		 ;; bind the key of checking document
 		 (local-set-key (kbd "C-c h") 
 				'matlab-view-current-word-doc-in-another-buffer)
+		 ;; bind the key of jump to source code
+		 (local-set-key (kbd "C-c s") 
+				'matlab-jump-to-definition-of-word-at-cursor)
 		 ;; handle company-backends
 		 (make-local-variable 'company-backends)
 		 (delete 'company-files company-backends)
@@ -39,6 +43,9 @@
 		 (add-to-ordered-list 'company-backends 'company-files -1)
 		 ;; band matlab-doc key
 		 (local-set-key (kbd "C-c h") 
-				'matlab-view-current-word-doc-in-another-buffer))))
+				'matlab-view-current-word-doc-in-another-buffer)
+		 		 ;; bind the key of jump to source code
+		 (local-set-key (kbd "C-c s") 
+				'matlab-jump-to-definition-of-word-at-cursor))))
 
 (provide 'matlab-mode)
