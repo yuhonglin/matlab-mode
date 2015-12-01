@@ -10,7 +10,7 @@
 (defun jtd-matlab-process-received-data (s)
   (when (> (length s) 2)
     (let ((rawreturn (substring s 2)))
-      (if (not (string= "" (s-shared-end ".m" rawreturn)))
+      (if (= 2 (length (s-shared-end ".m" rawreturn)))
 	  rawreturn ;; contains '.m'
 	(if (file-exists-p (concat rawreturn ".m"))
 	    (concat rawreturn ".m") ;; append the '.m'
