@@ -2,7 +2,7 @@
 (require 'matlab-server)
 (require 'company-matlab)
 (require 'flycheck-matlab)
-;(require 'doc-matlab)
+(require 'doc-matlab)
 ;(require 'jtd-matlab)
 
 (add-hook 'buffer-list-update-hook
