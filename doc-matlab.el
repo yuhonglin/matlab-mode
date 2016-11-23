@@ -1,8 +1,9 @@
 (require 'matlab-server)
+(require 's)
 
 (defun doc-matlab-process-received-data (s)
-  (when (> (length s) 2)
-    (substring s 2)))
+  (when (> (length s) 4)
+    (substring (s-chomp (s-trim s)) 0 -2)))
 
 (defun doc-matlab-grab-current-word ()
   (save-excursion
@@ -15,14 +16,10 @@
 (defun matlab-view-current-word-doc-in-another-buffer ()
   "look up the matlab help info and show in another buffer"
   (interactive)
-  (let ((status (matlab-server-get-status)))
-    (if (not (string= status "ready"))
-	(error status)))
-  
   (let* ((word (doc-matlab-grab-current-word))
 	 (doc (doc-matlab-process-received-data 
-	       (matlab-server-get-response-of-command 
-		(concat "matlabeldodoc('" word "', " "'" (buffer-file-name) "', " matlab-server-port ")\n")))))
+	       (matlab-send-request-sync
+		(concat "help " word)))))
     (if (= (length doc) 0)
 	(error (concat "doc of '" word "' not found")))
     
