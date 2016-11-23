@@ -145,9 +145,9 @@ Called by matlab-send-request-sync"
       (progn
 	(message "matlab: starting background matlab...")
 	(matlab-send-request-sync-helper "import com;") ;; ignore first request
-	(setq matlab-just-startup nil)
-	(message "matlab: done")
-	(apply 'matlab-send-request-sync-helper request args))
+	(setq matlab-just-startup nil)	
+	(apply 'matlab-send-request-sync-helper request args)
+	(message "matlab: done"))
     (apply 'matlab-send-request-sync-helper request args)))
 
 

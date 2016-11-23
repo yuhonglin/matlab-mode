@@ -35,7 +35,7 @@
   (let* ((word (jtd-matlab-grab-current-word))
 	 (scpath (jtd-matlab-process-received-data 
 		  (matlab-send-request-sync
-		   (concat "which('" "plot" "', 'in', " "'" (file-truename (buffer-file-name))  "')")))))
+		   (concat "which('" word "', 'in', " "'" (file-truename (buffer-file-name))  "')")))))
     (if scpath
 	(find-file scpath)
       (error "can not find the definition"))))
