@@ -3,7 +3,8 @@
 An emacs matlab mode based on the [classic one](http://matlab-emacs.sourceforge.net/).
 
 ## Warning
-First use or open ```.m``` file can be slow because it needs to open a background matlab process.
+1. First use or open ```.m``` file can be slow because it needs to open a background matlab process.
+2. You need to set ```matlab-server-executable``` to where your matlab exec.
 
 ## Highlights
 

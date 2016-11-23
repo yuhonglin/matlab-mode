@@ -1,7 +1,7 @@
 ;; Only API: matlab-send-request-sync (request &rest args)
 ;;           return command output as string
 
-(defvar matlab-server-executable "/home/lin/local/MatlabR2015a/bin/matlab")
+(defvar matlab-server-executable "matlab")
 (defvar matlab-server-process nil)
 (defvar matlab-server-buffer " *matlab* "
   "The name of the buffer for the matlab process to run in")
