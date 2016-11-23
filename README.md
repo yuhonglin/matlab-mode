@@ -29,7 +29,7 @@ If it does not work, it may be becasue you have not added the file's folder into
 3. Add the following to the initialization file
 
 ```elisp
-(setq matlab-shell-command "/path/to/matlab/binary")
+(setq matlab-server-executable "/path/to/matlab/binary")
 (add-to-list 'load-path "/path/to/matlab-mode/")
 (require 'matlab-mode)
 (matlab-mode-common-setup)
