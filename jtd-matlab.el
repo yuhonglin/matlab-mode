@@ -8,8 +8,9 @@
 ;; function in matlab contains file extensions '.m',
 ;; but sometime does not.
 (defun jtd-matlab-process-received-data (s)
-  (when (> (length s) 2)
-    (let ((rawreturn (substring s 2)))
+  (when (> (length s) 4)
+    (let ((rawreturn (car (s-match "/[^><()\t\n,'\";:]+\\(:[0-9]+\\)?"
+				   (s-chomp (s-trim s))))))
       (if (= 2 (length (s-shared-end ".m" rawreturn)))
 	  rawreturn ;; contains '.m'
 	(if (file-exists-p (concat rawreturn ".m"))
@@ -28,14 +29,13 @@
 (defun matlab-jump-to-definition-of-word-at-cursor ()
   "open the source code of the word at cursor"
   (interactive)
-  (let ((status (matlab-server-get-status)))
-    (if (not (string= status "ready"))
-	(error status)))
+  (if (not (buffer-file-name))
+      (error "jtd-matlab: you should save the file first"))
 
   (let* ((word (jtd-matlab-grab-current-word))
 	 (scpath (jtd-matlab-process-received-data 
-		  (matlab-server-get-response-of-command 
-		   (concat "matlabeldojtd('" word "', " "'" (buffer-file-name) "', " matlab-server-port ")\n")))))
+		  (matlab-send-request-sync
+		   (concat "which('" "plot" "', 'in', " "'" (file-truename (buffer-file-name))  "')")))))
     (if scpath
 	(find-file scpath)
       (error "can not find the definition"))))

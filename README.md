@@ -17,7 +17,7 @@ First use or open ```.m``` file can be slow because it needs to open a backgroun
 3. Easy to view document of word at cursor (default keybinding: <kbd>Ctrl-c</kbd> + <kbd>h</kbd>).
 
 
-4. ```TODO``` Jump to definition (default keybinding: <kbd>Ctrl-c</kbd> + <kbd>s</kbd>).
+4. Jump to definition (default keybinding: <kbd>Ctrl-c</kbd> + <kbd>s</kbd>).
 Currently, this only helps open the souce file (can not go to the definition of the function).
 If it does not work, it may be becasue you have not added the file's folder into matlab workspace.
 
