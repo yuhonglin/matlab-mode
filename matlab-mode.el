@@ -5,11 +5,16 @@
 (require 'doc-matlab)
 (require 'jtd-matlab)
 
+
+;; update working path
+(defvar matlab-last-work-directory "~")
 (add-hook 'buffer-list-update-hook
 	  (lambda ()
-	    (if (or (string= "matlab-mode" major-mode)
-		    (string= (buffer-name) "*MATLAB*"))
-		(matlab-send-request-sync (concat "cd " default-directory)))))
+	    (if (and (or (string= "matlab-mode" major-mode)
+			 (string= (buffer-name) "*MATLAB*"))
+		     (not (string= matlab-last-work-directory default-directory)))
+		(progn (matlab-send-request-sync (concat "cd " default-directory))
+		       (setq matlab-last-work-directory default-directory)))))
 
 ;; setup that can be changed
 (defun matlab-mode-common-setup ()
