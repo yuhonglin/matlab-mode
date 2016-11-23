@@ -14,8 +14,8 @@ First use or open ```.m``` file can be slow because it needs to open a backgroun
 2. A flycheck backend
 ![demo](./image/flycheck-demo.png)
 
-3. ```TODO``` Easy to view document of word at cursor (default keybinding: <kbd>Ctrl-c</kbd> + <kbd>h</kbd>).
-The above functionalities need running ```matlab-shell``` command first.
+3. Easy to view document of word at cursor (default keybinding: <kbd>Ctrl-c</kbd> + <kbd>h</kbd>).
+
 
 4. ```TODO``` Jump to definition (default keybinding: <kbd>Ctrl-c</kbd> + <kbd>s</kbd>).
 Currently, this only helps open the souce file (can not go to the definition of the function).
