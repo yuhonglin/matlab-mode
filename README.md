@@ -2,6 +2,9 @@
 
 An emacs matlab mode based on the [classic one](http://matlab-emacs.sourceforge.net/).
 
+## Warning
+First use or open ```.m``` file can be slow because it needs to open a background matlab process.
+
 ## Highlights
 
 1. A company-mode backend
@@ -11,10 +14,10 @@ An emacs matlab mode based on the [classic one](http://matlab-emacs.sourceforge.
 2. A flycheck backend
 ![demo](./image/flycheck-demo.png)
 
-3. Easy to view document of word at cursor (default keybinding: <kbd>Ctrl-c</kbd> + <kbd>h</kbd>).
+3. ```TODO``` Easy to view document of word at cursor (default keybinding: <kbd>Ctrl-c</kbd> + <kbd>h</kbd>).
 The above functionalities need running ```matlab-shell``` command first.
 
-4. Jump to definition (default keybinding: <kbd>Ctrl-c</kbd> + <kbd>s</kbd>).
+4. ```TODO``` Jump to definition (default keybinding: <kbd>Ctrl-c</kbd> + <kbd>s</kbd>).
 Currently, this only helps open the souce file (can not go to the definition of the function).
 If it does not work, it may be becasue you have not added the file's folder into matlab workspace.
 
@@ -30,8 +33,6 @@ If it does not work, it may be becasue you have not added the file's folder into
 (require 'matlab-mode)
 (matlab-mode-common-setup)
 ```
-
-> Do not forget to run matlab-shell if you want to use autocompletion and syntax checking.
 
 ## Copyright
 

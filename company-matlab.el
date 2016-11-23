@@ -1,6 +1,6 @@
 ;;; company-matlab.el --- support for the Matlab programming language
 
-;; Copyright (C) 2015  yuhonglin
+;; Copyright (C) 2016  yuhonglin
 
 ;; Author: yuhonglin <yuhonglin1986@gmail.com>
 ;; Keywords: languages, terminals
@@ -40,32 +40,22 @@
 (defvar company-matlab-complete-candidates ""
   "The candidates")
 
-(defun company-matlab-process-received-data (in arg)
-  (delq nil (mapcar (lambda (s)
-		      (if (or (string= s "") (string= (substring s 1) arg))
-			      nil (substring s 1)))
-		    (s-split "\000" in))))
+(defun company-matlab-process-received-data (inarg)
+  (mapcar 'car 
+	  (mapcar 'cdr 
+		  (s-match-strings-all "'\\([^ \t\n']+\\)'" inarg))))
 
 
 ;; some are copied from matlab-shell-collect-command-output function
 (defun company-matlab-get-candidates (arg)
-  (if (or (string= arg "")
-	  (string= (substring arg 1 1) ".")
-	  (string= (substring arg 1 1) "~"))
-      nil
-    (let ((status (matlab-server-get-status)))
-      (if (not (string= status "ready"))
-	  (progn
-	    (message status)
-	    ;; nil)
-	    (company-other-backend))
-	(let ((res (company-matlab-process-received-data
-		    (matlab-server-get-response-of-command 
-		     (concat "matlabeldocomplete('" arg "', " matlab-server-port ")\n")) arg)))
-	  (if (eq res nil)
-	    ;;  nil
-	    (company-other-backend)
-	    res))))))
+  (let ((res (company-matlab-process-received-data
+	      (matlab-send-request-sync 
+	       (concat "tmp=com.mathworks.jmi.MatlabMCR;tmp.mtFindAllTabCompletions('" 
+		       arg "'," (int-to-string (length arg)) ",0)")))))
+    (if (eq res nil)
+	;;  nil
+	(company-other-backend)
+      res)))
 
 
 (defun company-matlab-grab-symbol ()
@@ -93,13 +83,8 @@
      (company-matlab-get-candidates arg))))
 
 
-(defun company-matlab-company-cancel-hook (arg)
-  (if (or (eq major-mode 'matlab-mode)
-	 (string= (buffer-name) "*MATLAB*"))
-      (setq company-matlab-is-completing nil)))
+(defun company-matlab-company-cancel-hook (arg))      
 
 (add-to-list 'company-completion-cancelled-hook 'company-matlab-company-cancel-hook)
-
-
 
 (provide 'company-matlab)

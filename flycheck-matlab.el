@@ -15,36 +15,29 @@
 	      'success '(bold error)) )))
 
 (defun flycheck-matlab-get-error (filepath)
-  (let ((rawerrstr (matlab-server-get-response-of-command 
-		    (concat "matlabeldolint('" filepath "', " matlab-server-port ")\n"))))
-    (if (not (string= "" rawerrstr))
-	(let ((errormsg (matlab-server-get-error-message-maybe (substring rawerrstr 2))))
-	  (if errormsg
-	      (error errormsg)
-	    (delq nil
-		  (mapcar (lambda (rrs)
-			    (if (not (string= rrs ""))
-				(let* ((cleanrs (substring rrs 2))
-				       (cleanrs-split (s-split "\t" (s-trim cleanrs))))
-				  (cl-multiple-value-bind (lpostart cpostart estr) cleanrs-split
-				    `(,(string-to-int lpostart) ,(string-to-int lpostart) ,(string-to-int cpostart) ,(string-to-int cpostart) ,estr)))))
-			  (s-split "\n" rawerrstr))))))))
+  (let ((rawerrstr (matlab-send-request-sync
+		    (s-trim (concat "arrayfun(@(x) display(sprintf('%d\t%d\t%s', x.line, x.column(1), x.message)), checkcode('"
+				    filepath "'))")))))
+    (delq nil
+	  (mapcar (lambda (rrs)
+		    (let* ((cleanrs (s-replace ">>" "" rrs))
+			   (cleanrs-split (s-split "\t" (s-trim cleanrs))))
+		      (when (= (length cleanrs-split) 3)
+			(cl-multiple-value-bind (lpostart cpostart estr) cleanrs-split
+			  `(,(string-to-int lpostart) ,(string-to-int lpostart) ,(string-to-int cpostart) ,(string-to-int cpostart) ,estr)))))
+		  (s-split "\n" rawerrstr)))))
 
 		    
 (defun flycheck-matlab--start (checker callback)
-  (let ((status (matlab-server-get-status)))
-    (if (not (string= status "ready"))
-      (error status)
-      (progn
-	(let* ((rawerror (flycheck-matlab-get-error (buffer-file-name)))
-	       (errors (mapcar (lambda (rerr)
-				 (cl-multiple-value-bind (lpostart lposend cpostart cposend estr) rerr
-				   (flycheck-error-new-at lpostart cpostart 'warning estr :checker checker)))
-			       rawerror)))
-	  (funcall callback 'finished errors))))))
+  (let* ((rawerror (flycheck-matlab-get-error (buffer-file-name)))
+	 (errors (mapcar (lambda (rerr)
+			   (cl-multiple-value-bind (lpostart lposend cpostart cposend estr) rerr
+			     (flycheck-error-new-at lpostart cpostart 'warning estr :checker checker)))
+			 rawerror)))
+    (funcall callback 'finished errors)))
   
 
-(flycheck-define-generic-checker 'matlab
+(flycheck-define-generic-checker 'flycheck-matlab
   "A syntax checker for matlab."
   :start #'flycheck-matlab--start
   :verify #'flycheck-matlab--verify
@@ -53,6 +46,6 @@
   :predicate (lambda ()
 	       (eq major-mode 'matlab-mode)))
 
-(add-to-list 'flycheck-checkers 'matlab)
+(add-to-list 'flycheck-checkers 'flycheck-matlab)
 
 (provide 'flycheck-matlab)
