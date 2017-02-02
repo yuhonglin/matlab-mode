@@ -17,7 +17,6 @@ An emacs matlab mode based on the [classic one](http://matlab-emacs.sourceforge.
 
 3. Easy to view document of word at cursor (default keybinding: <kbd>Ctrl-c</kbd> + <kbd>h</kbd>).
 
-
 4. Jump to definition (default keybinding: <kbd>Ctrl-c</kbd> + <kbd>s</kbd>).
 Currently, this only helps open the souce file (can not go to the definition of the function).
 If it does not work, it may be becasue you have not added the file's folder into matlab workspace.
@@ -34,6 +33,13 @@ If it does not work, it may be becasue you have not added the file's folder into
 (require 'matlab-mode)
 (matlab-mode-common-setup)
 ```
+
+## Usage
+To use the functionalities, one must first run <kbd>M-x</kbd> ```matlab-start``` to start the background process.
+Since matlab is a bit slow to start, you may need to wait a few seconds.
+
+## Recommendation
+Recommend to turn-off automatic complete in company-mode and do the completion when needed.
 
 ## Copyright
 
