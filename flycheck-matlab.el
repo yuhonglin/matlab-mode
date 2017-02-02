@@ -9,23 +9,26 @@
   (list
    (flycheck-verification-result-new
     :label "mlint path checking"
-    :message (if t
+    :message (if (and matlab-server-process
+		      (eq (process-status matlab-server-process) 'run))
 		 "matlab is on" "matlab process not found")
     :face (if t
 	      'success '(bold error)) )))
 
 (defun flycheck-matlab-get-error (filepath)
-  (let ((rawerrstr (matlab-send-request-sync
-		    (s-trim (concat "arrayfun(@(x) display(sprintf('%d\t%d\t%s', x.line, x.column(1), x.message)), checkcode('"
-				    filepath "'))")))))
-    (delq nil
-	  (mapcar (lambda (rrs)
-		    (let* ((cleanrs (s-replace ">>" "" rrs))
-			   (cleanrs-split (s-split "\t" (s-trim cleanrs))))
-		      (when (= (length cleanrs-split) 3)
-			(cl-multiple-value-bind (lpostart cpostart estr) cleanrs-split
-			  `(,(string-to-int lpostart) ,(string-to-int lpostart) ,(string-to-int cpostart) ,(string-to-int cpostart) ,estr)))))
-		  (s-split "\n" rawerrstr)))))
+  (if (and matlab-server-process
+	   (eq (process-status matlab-server-process) 'run))
+      (let ((rawerrstr (matlab-send-request-sync
+			(s-trim (concat "arrayfun(@(x) display(sprintf('%d\t%d\t%s', x.line, x.column(1), x.message)), checkcode('"
+					filepath "'))")))))
+	(delq nil
+	      (mapcar (lambda (rrs)
+			(let* ((cleanrs (s-replace ">>" "" rrs))
+			       (cleanrs-split (s-split "\t" (s-trim cleanrs))))
+			  (when (= (length cleanrs-split) 3)
+			    (cl-multiple-value-bind (lpostart cpostart estr) cleanrs-split
+			      `(,(string-to-int lpostart) ,(string-to-int lpostart) ,(string-to-int cpostart) ,(string-to-int cpostart) ,estr)))))
+		      (s-split "\n" rawerrstr))))))
 
 		    
 (defun flycheck-matlab--start (checker callback)
@@ -35,7 +38,7 @@
 			     (flycheck-error-new-at lpostart cpostart 'warning estr :checker checker)))
 			 rawerror)))
     (funcall callback 'finished errors)))
-  
+
 
 (flycheck-define-generic-checker 'flycheck-matlab
   "A syntax checker for matlab."

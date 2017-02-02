@@ -7,11 +7,10 @@
   "The name of the buffer for the matlab process to run in")
 (defvar matlab-eot ">>")
 (defvar matlab-just-startup t)
-
+(defvar matlab-process-auto-start t)
 
 (defun matlab-start-server-process ()
-    (when (setq matlab-server-executable (or matlab-server-executable
-					   (matlab-locate-server-executable)))
+  (if (and matlab-server-executable (matlab-check-server-executable))
       (let ((process-connection-type nil)
 	    (process-adaptive-read-buffering nil)
 	    process)
@@ -26,7 +25,12 @@
 	(set-process-sentinel process 'matlab-server-process-sentinel)
 	(set-process-filter process 'matlab-server-process-filter)
 	(setq matlab-just-startup t)
-	process)))
+	process)
+    (error "matlab: can't find the matlab executable, try to set matlab-server-executable")))
+
+
+(defun matlab-check-server-executable ()
+  (executable-find matlab-server-executable))
 
 (defun matlab-get-server-process-create ()
   (if (and matlab-server-process
@@ -138,17 +142,33 @@ Called by matlab-send-request-sync"
 	    (accept-process-output process))
 	  (cdr matlab-sync-result))))))
 
-
-(defun matlab-send-request-sync (request &rest args)
-  "Send a request to matlab and wait for the result."
-  (if (or matlab-just-startup (not (process-live-p matlab-server-process)))
+(defun matlab-start ()
+  (interactive)
+  (if (not (and matlab-server-process
+		(process-live-p matlab-server-process)))
       (progn
 	(message "matlab: starting background matlab...")
 	(matlab-send-request-sync-helper "import com;") ;; ignore first request
-	(setq matlab-just-startup nil)	
-	(apply 'matlab-send-request-sync-helper request args)
-	(message "matlab: done"))
-    (apply 'matlab-send-request-sync-helper request args)))
+	(setq matlab-just-startup nil)
+	(message "matlab: done")
+	(if (and (or (string= "matlab-mode" major-mode)
+		     (string= (buffer-name) "*MATLAB*"))
+		 (not (string= matlab-last-work-directory default-directory)))
+	    (progn (matlab-send-request-sync (concat "cd " default-directory))
+		   (setq matlab-last-work-directory default-directory))))))
+
+
+(defun matlab-send-request-sync (request &rest args)
+  "Send a request to matlab and wait for the result."
+  (if matlab-process-auto-start
+      (if (or matlab-just-startup (not (process-live-p matlab-server-process)))
+	  (progn
+	    (message "matlab: starting background matlab...")
+	    (matlab-send-request-sync-helper "import com;") ;; ignore first request
+	    (setq matlab-just-startup nil)	
+	    (apply 'matlab-send-request-sync-helper request args)
+	    (message "matlab: done"))
+	(apply 'matlab-send-request-sync-helper request args))))
 
 
 (provide 'matlab-server)

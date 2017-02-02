@@ -48,20 +48,22 @@
 
 ;; some are copied from matlab-shell-collect-command-output function
 (defun company-matlab-get-candidates (arg)
-  (let ((res (company-matlab-process-received-data
-	      (matlab-send-request-sync 
-	       (concat "tmp=com.mathworks.jmi.MatlabMCR;tmp.mtFindAllTabCompletions('" 
-		       arg "'," (int-to-string (length arg)) ",0)")))))
-    (if (eq res nil)
-	;;  nil
-	(company-other-backend)
-      res)))
+  (if (and matlab-server-process
+	   (eq (process-status matlab-server-process) 'run))  
+      (let ((res (company-matlab-process-received-data
+		  (matlab-send-request-sync 
+		   (concat "tmp=com.mathworks.jmi.MatlabMCR;tmp.mtFindAllTabCompletions('" 
+			   arg "'," (int-to-string (length arg)) ",0)")))))
+	(if (eq res nil)
+	    ;;  nil
+	    (company-other-backend)
+	  res))))
 
 
 (defun company-matlab-grab-symbol ()
   (let* ((prefix (buffer-substring (point) 
-				  (save-excursion (skip-chars-backward "a-zA-Z0-9._")
-						  (point)))))
+				   (save-excursion (skip-chars-backward "a-zA-Z0-9._")
+						   (point)))))
     (if (or (= (length prefix) 0)
 	    (string= (substring prefix 0 1) ".")
 	    (string= (substring prefix 0 1) "/"))
@@ -83,7 +85,7 @@
      (company-matlab-get-candidates arg))))
 
 
-(defun company-matlab-company-cancel-hook (arg))      
+(defun company-matlab-company-cancel-hook (arg))
 
 (add-to-list 'company-completion-cancelled-hook 'company-matlab-company-cancel-hook)
 
